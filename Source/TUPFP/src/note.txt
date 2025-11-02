@@ -1,0 +1,2 @@
+Trong thư mục bin đã có các file .class, phải đứng ở thư muc gốc (chứa /src để biên dịch)
+Compile: java -cp bin main/java/mining.Main
