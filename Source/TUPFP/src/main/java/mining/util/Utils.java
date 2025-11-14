@@ -50,7 +50,7 @@ public class Utils {
             BufferedReader reader = new BufferedReader(new FileReader(path));
             String line;
             while((line = reader.readLine()) != null){
-                String[] items = line.split("\s+");
+                String[] items = line.split("\\s+");
                 List<UncertainItem> uncertainItems = new ArrayList<>();
                 for(int i = 1; i<items.length ; i++){
                     UncertainItem uncertainItemsValue = getUncertainItem(items[i]); 
@@ -70,10 +70,12 @@ public class Utils {
         }catch(IOException ioe){
             System.out.println("File error");
             System.err.println(ioe);
-        }catch(NumberFormatException nfe){
-            System.out.println("NumberFormatException");
-            System.err.println(nfe);
         }
+        // catch(NumberFormatException nfe){
+        //     System.out.println("NumberFormatException");
+        //     System.err.println(nfe);
+        //     // System.out.println(nfe.getMessage());
+        // }
         
         return result;
     }
