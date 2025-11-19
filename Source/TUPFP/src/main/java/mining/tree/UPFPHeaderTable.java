@@ -9,8 +9,8 @@ import java.util.Map;
 // import main.java.mining.model.UncertainItem;
 
 public class UPFPHeaderTable {
-    public final Map<String, ItemInfo> table = new HashMap<>();
-    private List<String> fList = new ArrayList<>();
+    public Map<String, ItemInfo> table = new HashMap<>();
+    public List<String> fList = new ArrayList<>();
 
     public static class ItemInfo {
         public double expSup;
@@ -29,6 +29,16 @@ public class UPFPHeaderTable {
 
     public ItemInfo getItemInfo(String item){
         return this.table.get(item);
+    }
+
+    // Thêm vào class UPFPHeaderTable
+    public ItemInfo addItem(String item, double expSup) {
+        ItemInfo info = new ItemInfo();
+        info.expSup = expSup;
+        info.periodicity = 0.0;
+        info.firstNode = null;
+        table.put(item, info);
+        return info;
     }
 
     // Thêm item, cập nhật nodeLink, sắp xếp theo expSup giảm dần
