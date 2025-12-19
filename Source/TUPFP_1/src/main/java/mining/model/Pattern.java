@@ -15,22 +15,22 @@ public class Pattern {
         this.esup = esup;
         this.eper = eper;
     }
-    
+
+    //#region getter
 
     public List<String> getItems() {
         return items;
     }
 
-
     public double getEsup() {
         return esup;
     }
-
 
     public double getEper() {
         return eper;
     }
 
+    //#endregion getter
 
     @Override
     public String toString() {

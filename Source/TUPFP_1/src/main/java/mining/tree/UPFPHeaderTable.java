@@ -6,14 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class UPFPHeaderTable {
+    /// table đại diện cho headerTable, lưu tên item và thông tin của nó, phục vụ cho quá trình xây cây
+    /// Flist là danh sách các item đủ điều kiện về tính định kỳ qua đợt quét CSDL đầu tiên, sắp xếp giảm dần theo Esup của item
     private Map<String, ItemInfo> table = new HashMap<>();
     private List<String> fList = new ArrayList<>();
 
+    /// class lưu thông tin của item trong headerTable
     public static class ItemInfo {
         public double expSup;
         public double periodicity;
         public UPFPNode firstNode;
     }
+
+    //#region setter & getter
 
     public List<String> getFlist(){
         return this.fList;
@@ -27,13 +32,19 @@ public class UPFPHeaderTable {
         this.table = table;
     }
 
+    public ItemInfo getItemInfo(String item){
+        return this.table.get(item);
+    }
+
+    public void setfList(List<String> fList) {
+        this.fList = fList;
+    }
+
+    //#endregion 
+
     public void sortFlist(){
         this.fList = new ArrayList<>(table.keySet());
         this.fList.sort((a,b) -> Double.compare(table.get(b).expSup, table.get(a).expSup));
-    }
-
-    public ItemInfo getItemInfo(String item){
-        return this.table.get(item);
     }
 
     public ItemInfo addItem(String item, double expSup) {
@@ -43,10 +54,6 @@ public class UPFPHeaderTable {
         info.firstNode = null;
         table.put(item, info);
         return info;
-    }
-
-    public void setfList(List<String> fList) {
-        this.fList = fList;
     }
 
 }

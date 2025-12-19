@@ -4,7 +4,7 @@ import java.util.List;
 
 /*
     Lớp đại diện cho các Transaction, lưu trữ các thông tin liên quan như mã giao dịch, timestamp, danh sách item xuất hiện.
-    Được sử dụng để lưu từng transaction từ file dữ liệu.
+    Được sử dụng để lưu từng transaction khi đọc file dữ liệu.
 */
 public class Transaction {
     private final int tid;
@@ -16,6 +16,8 @@ public class Transaction {
         this.timestamp = timestamp;
         this.items = items;
     }
+
+    //#region getter
 
     public int getTid() {
         return tid;
@@ -29,4 +31,10 @@ public class Transaction {
         return items;
     }
     
+    //#endregion getter
+
+    @Override
+    public String toString(){
+        return "id: "+ this.tid + ", timestamp: " + this.timestamp + ", items: " + this.items;
+    }
 }

@@ -20,6 +20,8 @@ public class UPFPNode {
         this.children = new HashMap<>();
     }
 
+    //#region setter & getter
+
     public String getItem() {
         return item;
     }
@@ -67,6 +69,8 @@ public class UPFPNode {
     public void setNodeLink(UPFPNode nodeLink) {
         this.nodeLink = nodeLink;
     }
+
+    //#endregion setter & getter
 
     @Override
     public String toString() {

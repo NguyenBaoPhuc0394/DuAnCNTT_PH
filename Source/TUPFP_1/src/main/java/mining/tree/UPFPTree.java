@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class UPFPTree {
     public final UPFPNode root;
     public UPFPHeaderTable headerTable;
-    public UPFPNode suffixNode;
+    // public UPFPNode suffixNode;
 
     public UPFPTree(){
         this.root = new UPFPNode(null);

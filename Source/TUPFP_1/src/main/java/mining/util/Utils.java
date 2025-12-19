@@ -16,11 +16,12 @@ public class Utils {
 
     static Scanner sc = new Scanner(System.in);
     
-    // Kiểm tra giá trị input đầu vào có hợp lệ không
-    public static boolean checkInputs(String topKInput, String maxExpPerInput){
+    // Kiểm tra giá trị input đầu vào bao gồm K và maxPer có hợp lệ không
+    // Các giá trị phải là số nguyên và lớn hơn 0
+    public static boolean checkInputs(String topKInput, String maxPerInput){
         try{
             int K = Integer.parseInt(topKInput);
-            double maxExpPer = Double.parseDouble(maxExpPerInput);
+            double maxExpPer = Double.parseDouble(maxPerInput);
             if(K <= 0 || maxExpPer <= 0){
                 return false;
             }
@@ -31,6 +32,7 @@ public class Utils {
     }
 
     // Xử lý các giá trị đầu vào không hợp lệ, nếu giá trị không hợp lệ, yêu cầu nhập lại.
+    // Nếu người dùng không nhập đúng định dạng thì yêu cầu người dùng nhập lại.
     public static Parameters inputHandler(){
         boolean valid = true;
         String K;
@@ -48,6 +50,9 @@ public class Utils {
 
     // Load dữ liệu từ file database lên, lưu vào một cấu trúc dữ liệu để dễ dàng truy xuất.
     public static List<Transaction> loadDatabase(String path){
+        /// Hàm này sẽ đọc file và xử lý các lỗi có thể xảy ra
+        /// Kết quả sẽ được sử dụng để lưu vào các class như Transaction và UncertainItem
+        /// Để sau này bước Scanner không cần phải đọc từ file mà chỉ cần sử dụng kết quả của hàm này để tìm các item đủ điều kiện.
         List<Transaction> result = new ArrayList<>();
         try{
             BufferedReader reader = new BufferedReader(new FileReader(path));

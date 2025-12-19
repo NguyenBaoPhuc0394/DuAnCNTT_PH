@@ -37,6 +37,7 @@ public class Main {
 
         Scanner scanner = new Scanner();
         UPFPHeaderTable header = scanner.scanFirstPass(db, parameters);
+        System.out.println(header.getFlist());
 
         long endTime = System.nanoTime(); 
         double elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 

@@ -1,7 +1,7 @@
 package main.java.mining.model;
 
 /*
-    Lớp đại diện cho các item, lưu giữ các thông tin tên của item và xác suất đi kèm với nó.
+    Lớp đại diện cho các item, lưu giữ các thông tin gồm tên của item và xác suất đi kèm với nó.
 */
 public class UncertainItem {
     private final String item;
@@ -12,12 +12,21 @@ public class UncertainItem {
         this.probability = probability;
     }
 
+    //#region getter
+
     public String getItem() {
         return item;
     }
 
     public double getProbability() {
         return probability;
+    }
+
+    //#endregion getter
+
+    @Override
+    public String toString(){
+        return "item: " + this.item + ", probability: " + this.probability;
     }
     
 }
