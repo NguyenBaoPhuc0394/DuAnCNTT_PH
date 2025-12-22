@@ -31,19 +31,19 @@ public class Main {
             parameters = Utils.inputHandler();
         }
 
-        /// SCANNER
+        //#region SCANNER
         List<Transaction> db = Utils.loadDatabase("src/resources/Retail_dataset.txt");
         long startTime = System.nanoTime(); 
 
         Scanner scanner = new Scanner();
         UPFPHeaderTable header = scanner.scanFirstPass(db, parameters);
-        System.out.println(header.getFlist());
 
         long endTime = System.nanoTime(); 
         double elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 
         System.out.println("Scanner: " + elapsedTimeInSeconds + " seconds");
+        //#endregion
         
-        /// TREE BUILDER
+        //#region TREE BUILDER
         startTime = System.nanoTime();
 
         TreeBuilder builder = new TreeBuilder();
@@ -52,8 +52,9 @@ public class Main {
         endTime = System.nanoTime(); 
         elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 
         System.out.println("TreeBuilder: " + elapsedTimeInSeconds + " seconds");
+        //#endregion
 
-        /// MINER
+        //#region MINER
         startTime = System.nanoTime();
 
         Miner miner = new Miner(parameters);
@@ -64,7 +65,7 @@ public class Main {
         endTime = System.nanoTime(); 
         elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 
         System.out.println("Miner: " + elapsedTimeInSeconds + " seconds");
-
+        //#endregion
     }
 
 }

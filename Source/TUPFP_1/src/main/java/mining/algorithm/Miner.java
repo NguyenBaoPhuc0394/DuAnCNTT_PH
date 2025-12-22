@@ -58,7 +58,7 @@ public class Miner {
     private void mineRecursive(UPFPTree tree, List<String> prefix) {
         List<String> fList = tree.headerTable.getFlist();
 
-        System.out.println("Processing prefix: " + prefix + ", FList size: " + fList.size());//
+        // System.out.println("Processing prefix: " + prefix + ", FList size: " + fList.size());//
 
         // Duyệt suffix từ dưới lên (Bottom-up Approach)
         // Duyệt các item trong HeaderTable theo thứ tự ngược (từ ExpSup thấp nhất lên cao nhất).
@@ -66,66 +66,50 @@ public class Miner {
         for (int i = fList.size() - 1; i >= 0; i--) {
             String suffix = fList.get(i);
 
-            // 1. Tạo Pattern tiềm năng mới: Prefix cũ + Suffix đang xét
+            // Bước 1. Tạo Pattern tiềm năng mới: Prefix cũ + Suffix đang xét
             // Ví dụ: Prefix cũ là {A}, Suffix là B -> Pattern mới là {A, B}
             List<String> newPrefix = new ArrayList<>(prefix);
             newPrefix.add(suffix);
 
-            // 2. Xây dựng CPB (Conditional Pattern Base)
+            // Bước 2. Xây dựng CPB (Conditional Pattern Base)
             // Tìm tất cả các đường đi trong cây dẫn đến node 'suffix'.
             // Mỗi đường đi kèm theo một trọng số (PIC của suffix tại đường đi đó).
             List<ConditionalPath> condPaths = buildConditionalPatternBase(tree, suffix);
             if (condPaths.isEmpty()) continue; // Nếu không có đường đi nào, bỏ qua
 
-            // // 3. Cắt tỉa bằng ESC (Expected Support Cap) 
-            // double ubEsup = calculateUBEsup(condPaths);
-            // // Nếu Cận trên < minSup hiện tại (của Top-K) -> Chắc chắn nhánh này vô vọng -> Cắt tỉa
-            // if (ubEsup < params.getMinSup()) {
-            //     continue; // bỏ nhánh
-            // }
-
-            // 3. Cắt tỉa bằng ESC (Expected Support Cap), không áp dụng cho 1-itemset
+            // Bước 3. Cắt tỉa bằng ESC (Expected Support Cap)
             double ubEsup = 0.0;
-            if (!prefix.isEmpty()) { 
+            if (!prefix.isEmpty()) {  //  không áp dụng cho 1-itemset
                 ubEsup = calculateUBEsup(condPaths);
-                // Nếu Cận trên < minSup hiện tại (của Top-K) -> Chắc chắn nhánh này vô vọng -> Cắt tỉa
-                if (ubEsup < params.getMinSup()) {
+                if (ubEsup < params.getMinSup()) { // Nếu Cận trên < minSup hiện tại (của Top-K) -> Chắc chắn nhánh này vô vọng -> Cắt tỉa
                     continue; // bỏ nhánh
                 }
             }
 
-            // 4. Tính toán Periodicity và cắt tỉa dựa trên MinOcc 
-            // Hàm này sẽ trả về giá trị MaxGap thực tế.
-            // Nếu vi phạm minOcc, nó trả về Double.MAX_VALUE -> Tự động bị prune ở bước so sánh sau.
+            // Bước 4. Tính toán Periodicity và cắt tỉa dựa trên MinOcc 
+            // Hàm này sẽ trả về giá trị MaxGap thực tế. Nếu vi phạm minOcc, nó trả về Double.MAX_VALUE -> Tự động bị prune ở bước so sánh sau.
             double eper = calculateMaxGapPer(condPaths);
-
-            // 5. Tính Esup cho chính Pattern này
-            double esup = calculateEsup(condPaths, newPrefix);
+            if(eper > params.getMaxPer()) continue;
                 
-            // 6. Cập nhật Top-K Heap
-            // Kiểm tra lần cuối xem pattern có đủ điều kiện vào Top-K không.
-            if (esup >= params.getMinSup() && eper <= params.getMaxPer()) {
+            // Bước 5. Cập nhật Top-K Heap
+            double esup = calculateEsup(condPaths, newPrefix); // Tính Esup cho chính Pattern này
+            if (esup >= params.getMinSup()) { // Kiểm tra lần cuối xem pattern có đủ điều kiện vào Top-K không.
                 Pattern p = new Pattern(newPrefix, esup, eper);
                 topK.add(p);
-                // Nếu Heap đã đầy K phần tử, cập nhật ngưỡng minSup
-                // bằng với phần tử nhỏ nhất trong Heap để cắt tỉa mạnh hơn ở các bước sau.
-                if (topK.getLength() == params.getK()) {
+                if (topK.getLength() == params.getK()) { // Nếu Heap đã đầy K phần tử, cập nhật ngưỡng minSup, bằng với phần tử nhỏ nhất trong Heap để cắt tỉa mạnh hơn ở các bước sau.
                     params.setMinSup(topK.getMinSup());
                 }
             }
             
-            // 7. Xây dựng Cây Có Điều Kiện (Conditional Tree)
-            // Hợp nhất các đường đi CPB thành một cây mới.
-            // Cây này đại diện cho "Ngữ cảnh của Suffix" (những gì xuất hiện trước Suffix).
-            // Node suffix sẽ không nằm trong cây này
-            UPFPTree condTree = buildConditionalTree(condPaths);
+            // Bước 6. Xây dựng Cây Có Điều Kiện (Conditional Tree)
+            // Hợp nhất các đường đi CPB thành một cây mới. Cây này đại diện cho "Ngữ cảnh của Suffix" (những gì xuất hiện trước Suffix).
+            UPFPTree condTree = buildConditionalTree(condPaths); // Node suffix sẽ không nằm trong cây này
 
-            System.out.println("Pattern: " + newPrefix + ", UB_Esup: " + ubEsup + ", MinSup: " + params.getMinSup());//
+            // System.out.println("Pattern: " + newPrefix + ", UB_Esup: " + ubEsup + ", MinSup: " + params.getMinSup());//
             
-            // 8. Gọi Đệ quy 
-            // Nếu cây con vẫn còn item (tức là còn Prefix Items để mở rộng), tiếp tục đào sâu.
+            // Bước 7. Gọi Đệ quy 
             if (!condTree.headerTable.getTable().isEmpty()) {
-                mineRecursive(condTree, newPrefix);
+                mineRecursive(condTree, newPrefix); // Nếu cây con vẫn còn item (tức là còn Prefix Items để mở rộng), tiếp tục đào sâu.
             }
         }
     }
@@ -152,9 +136,14 @@ public class Miner {
             double cap = node.getExpSupCap();  
 
             // Lấy timestamp (được lưu tại node Suffix)
+            // Vì timestamps của một path chỉ được lưu tại tail node 
+            // Nhưng suffix này không chắc là tail node tại mọi giao dịch nó xuất hiện
+            // Vì vậy cần có cơ chế lấy timestamp tại tail node của giao dịch mà suffix xuất hiện (suffix không phải tail node tại giao dịch đó)
             List<Integer> ts = new ArrayList<>(node.getTimestamps());
-            UPFPNode parent = node.getParent();
+            if(ts == null || ts.isEmpty())
+                ts = collectTimestampsFromSubtree(node);
 
+            UPFPNode parent = node.getParent();
             // Đi ngược từ node Suffix lên Root để lấy đường đi tiền tố
             while (parent != null && parent != tree.root) {
                 path.add(parent.getItem());
@@ -173,6 +162,33 @@ public class Miner {
         }
         return paths;
     }
+
+    /**
+     * Hàm lấy timestamp tại tail node của giao dịch mà tham số node xuât hiện
+     */
+    private List<Integer> collectTimestampsFromSubtree(UPFPNode node) {
+        List<Integer> allTimestamps = new ArrayList<>();
+        
+        //Điều kiện dừng: nếu node là null
+        if (node == null) {
+            return allTimestamps;
+        }
+        
+        // Nếu node này có timestamps, lấy luôn
+        if (node.getTimestamps() != null && !node.getTimestamps().isEmpty()) {
+            allTimestamps.addAll(node.getTimestamps());
+        }
+        
+        // DFS xuống tất cả children để tìm tail-nodes
+        if (node.getChildren() != null && !node.getChildren().isEmpty()) {
+            for (UPFPNode child : node.getChildren().values()) {
+                allTimestamps.addAll(collectTimestampsFromSubtree(child));
+            }
+        }
+        
+        return allTimestamps;
+    }
+
 
     /**
      * Hàm xây dựng Cây Có Điều Kiện từ danh sách CPB.
@@ -220,14 +236,23 @@ public class Miner {
             }
 
             // Sau khi chèn xong đường đi, gán timestamps vào node cuối cùng của đường đi tiền tố.
-            // (Node này đóng vai trò là đuôi trong cây conditional)
             if (current != condTree.root) {
                 current.getTimestamps().addAll(cp.timestamps);
-                // condTree.suffixNode = current;
             }
         }
 
-        // Sau khi xây xong cây, sắp xếp HeaderTable để chuẩn bị cho đệ quy
+        // Lọc items có ExpSup < minSup
+        condHeader.getTable().entrySet().removeIf(entry -> {
+            double expSup = 0.0;
+            UPFPNode node = entry.getValue().firstNode;
+            while (node != null) {
+                expSup += node.getExpSupCap();
+                node = node.getNodeLink();
+            }
+            return expSup < params.getMinSup();
+        });
+
+        // Sau khi xây xong cây, sắp xếp FList trong HeaderTable để chuẩn bị cho đệ quy
         condHeader.sortFlist(); 
         // Gán HeaderTable cho cây
         condTree.attachConditionalHeader(condHeader);

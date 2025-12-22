@@ -6,6 +6,11 @@
 
 - Dự án này triển khai thuật toán khai thác các mẫu (pattern) có Độ Hỗ trợ Kỳ vọng (Expected Support - Esup) cao nhất (Top-K) đồng thời thỏa mãn ràng buộc về Tính Định kỳ Kỳ vọng (Expected Periodicity - Eper) trong các cơ sở dữ liệu có tính chất bất định và gắn nhãn thời gian. Thuật toán sử dụng cấu trúc cây nén **UPFP-Tree** và cơ chế **Top-K Min-Heap** để cắt tỉa động, loại bỏ sự cần thiết của ngưỡng hỗ trợ tối thiểu ($\text{minSup}$) đầu vào.
 
+## Hướng dẫn cách chạy chương trình trên command line
+- Tải dự án về -> Di chuyển vào ...\source_code\Source\TUPFP_1
+- Chạy dòng lệnh sau trên terminal: java -cp bin main/java/mining.Main
+- Lúc này sẽ hiện lên yêu cầu nhập 2 tham số là Top-K và maxPer, người dùng chỉ cần nhập giá trị mong muốn là được (Ví dụ Top-K=10, maxPer=1000)
+
 ## Cấu trúc dự án (Branch tupfp)
 
 - Dự án được tổ chức theo cấu trúc chuẩn của Java/Maven/Gradle, tập trung vào thư mục `src/main/java/mining/`.

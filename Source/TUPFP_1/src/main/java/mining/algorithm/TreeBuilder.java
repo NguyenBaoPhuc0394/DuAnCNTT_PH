@@ -22,17 +22,16 @@ public class TreeBuilder {
      */
     public UPFPTree buildTree(List<Transaction> db, UPFPHeaderTable header) {
         
-        // 1. Khởi tạo cây rỗng, ban đầu chỉ có node root = null
-        UPFPTree tree = new UPFPTree(); 
+        UPFPTree tree = new UPFPTree(); // Khởi tạo cây rỗng, ban đầu chỉ có node root = null
 
-        // 2. Sao chép cấu trúc HeaderTable từ Scanner sang cây.
-        // Để cây biết thứ tự ưu tiên (L-Order) của các item.
+        // Sao chép cấu trúc HeaderTable từ Scanner sang cây. Để cây biết thứ tự ưu tiên (L-Order) của các item.
         tree.headerTable.setTable(header.getTable()); // gán headerTable vừa tạo được ở Scanner cho headerTable của cây
         tree.headerTable.setfList(new ArrayList<>(header.getFlist())); // Gán Flist cho cây
         List<String> fList = header.getFlist();
 
-        // 3. Duyệt qua từng giao dịch trong DB để đưa vào cây
+        // Duyệt qua từng giao dịch trong DB để đưa vào cây
         for(Transaction t : db){ 
+            //#region Bước 1: Lọc và sắp xếp item trong mỗi giao dịch
             List<UncertainItem> sortedItems = new ArrayList<>();
 
             // a. Lọc item: Chỉ giữ lại các item nằm trong F-List
@@ -50,11 +49,13 @@ public class TreeBuilder {
                 int idxB = fList.indexOf(b.getItem());
                 return Integer.compare(idxA, idxB);
             });
+            //#endregion
 
-            // Thực hiện chèn giao dịch vào cây
+            //#region Bước 2: Thực hiện chèn giao dịch vào cây
             if (!sortedItems.isEmpty()) {
                 insertTransaction(tree, sortedItems, t.getTimestamp());
             }
+            //#endregion
         }
 
         return tree;
@@ -69,8 +70,7 @@ public class TreeBuilder {
         UPFPNode current = tree.root; // Bắt đầu từ nút gốc (root)
 
         // Biến này lưu xác suất lớn nhất của các item tiền tố (Prefix) trong giao dịch này.
-        // Dùng để tính PIC. Khởi tạo là 1.0 (coi như Root luôn có xác suất 1.0).
-        double prefixMaxProb = 1.0;
+        double prefixMaxProb = 1.0; // Dùng để tính PIC. Khởi tạo là 1.0 (coi như Root luôn có xác suất 1.0).
 
         // Duyệt qua từng item trong giao dịch
         for (int i = 0; i < items.size(); i++) {
@@ -86,15 +86,13 @@ public class TreeBuilder {
             // 2. Tìm hoặc tạo node trên cây
             // Kiểm tra xem từ node hiện tại (current) đã có nhánh con nào tên là 'item' chưa.
             UPFPNode child = current.getChildren().get(item);
-            if (child == null) {
-                // Nếu chưa có, tạo node mới
+            if (child == null) { // Nếu chưa có, tạo node mới
                 child = new UPFPNode(item);
                 current.getChildren().put(item, child); // thêm node con cho node cha (current)
                 child.setParent(current); // Liên kết với node cha
 
                 // Cập nhật nodeLink trong HeaderTable:
-                // Nối node mới này vào đầu danh sách liên kết của item đó.
-                // Để sau này Miner có thể duyệt ngang qua tất cả các node cùng tên.    
+                // Nối node mới này vào đầu danh sách liên kết của item đó.  
                 UPFPHeaderTable.ItemInfo info = tree.headerTable.getItemInfo(item);
                 if (info != null) {
                     child.setNodeLink(info.firstNode);

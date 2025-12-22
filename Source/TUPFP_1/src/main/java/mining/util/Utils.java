@@ -41,7 +41,7 @@ public class Utils {
             valid = true;
             System.out.print("Please enter Top-K value: ");
             K = sc.nextLine();
-            System.out.print("Please enter maxExpPer value: ");
+            System.out.print("Please enter maxPer value: ");
             maxExpPer = sc.nextLine();
             valid = Utils.checkInputs(K, maxExpPer);
         }while(!valid);
