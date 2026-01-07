@@ -22,17 +22,17 @@ public class ExperimentRunner {
 
     private static final String DATASET_PATH = "data/uncertain/";
     private static final String RESULT_FILE = "data/output/experiment_results_final.csv";
-    private static final List<String> ALGORITHMS = Arrays.asList("Baseline", "Standard", "Optimized");
+    private static final List<String> ALGORITHMS = Arrays.asList("Optimized");
 
     public static void main(String[] args) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(RESULT_FILE))) {
             writer.write("Experiment_Type,Dataset,Algorithm,K,Alpha,Beta,Runtime(ms),Memory(MB)\n");
             List<DatasetConfig> configs = Arrays.asList(
-                new DatasetConfig("Foodmart", "foodmart.txt", new int[]{500, 700, 900, 1100}, 500),
-                new DatasetConfig("T10I4D100K", "T10I4D100K.txt", new int[]{750, 1000, 1250, 1500}, 1500),
-                new DatasetConfig("Mushroom", "mushrooms.txt", new int[]{50, 75, 100, 125}, 400),
-                new DatasetConfig("Chess", "chess.txt", new int[]{40, 50, 60, 70}, 80)
+                // new DatasetConfig("Retail", "retail.txt", new int[]{500, 700, 900, 1100}, 1000),
+                // new DatasetConfig("T10I4D100K", "T10I4D100K.txt", new int[]{750, 1000, 1250, 1500}, 1250),
+                new DatasetConfig("Mushroom", "mushrooms.txt", new int[]{75, 100, 125, 150}, 120),
+                new DatasetConfig("Chess", "chess.txt", new int[]{40, 50, 60, 70}, 60)
             );
 
             System.out.println("=== Start Experiment ===");
@@ -50,7 +50,7 @@ public class ExperimentRunner {
                 }
 
                 System.out.println("   [Exp 1] Run Varying K...");
-                double fixedAlpha = 0.5;
+                double fixedAlpha = 0.6;
                 
                 for (int k : config.kValuesToTest) {
                     for (String algName : ALGORITHMS) {
@@ -60,7 +60,7 @@ public class ExperimentRunner {
 
                 System.out.println("   [Exp 2] Run Varying Alpha...");
                 int fixedK = config.fixedKForAlphaTest;
-                double[] alphaValues = {0.2, 0.4, 0.6, 0.8};
+                double[] alphaValues = {0.5, 0.6, 0.7, 0.8};
 
                 for (double alpha : alphaValues) {
                     for (String algName : ALGORITHMS) {

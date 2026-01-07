@@ -1,7 +1,7 @@
 package MTPIU.experiment;
 
 import MTPIU.algorithms.mining.AbstractMiner;
-import MTPIU.algorithms.mining.StandardMiner;
+import MTPIU.algorithms.mining.BaselineMiner;
 import MTPIU.algorithms.topk.TopKHeap;
 import MTPIU.config.Parameters;
 import MTPIU.core.database.Database;
@@ -13,14 +13,14 @@ import MTPIU.core.tree.UPFPTree;
 import MTPIU.core.utils.InputProcessing;
 import MTPIU.core.utils.PatternWriter;
 
-public class ChessStandardMiner {
+public class T10I4D100KBaselineMiner {
     public static void main(String[] args) {
 
         Parameters params = InputProcessing.inputHandler();
 
         long startTime = System.nanoTime(); 
 
-        String pathFile = "data/uncertain/chess.txt";
+        String pathFile = "data/uncertain/T10I4D100K.txt";
         Database db = DatasetLoader.loadDatabase(pathFile);
         TopKHeap topKHeap = new TopKHeap(params.getK(), params, db);
 
@@ -30,9 +30,8 @@ public class ChessStandardMiner {
         TreeBuilder builder = new TreeBuilder();
         UPFPTree tree = builder.buildTree(db, headerTable);
 
-        AbstractMiner miner = new StandardMiner(topKHeap, params, db);
+        AbstractMiner miner = new BaselineMiner(topKHeap, params, db);
         miner.run(tree);
-
 
         long endTime = System.nanoTime(); 
         double elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 

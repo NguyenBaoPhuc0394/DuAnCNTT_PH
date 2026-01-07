@@ -13,14 +13,14 @@ import MTPIU.core.tree.UPFPTree;
 import MTPIU.core.utils.InputProcessing;
 import MTPIU.core.utils.PatternWriter;
 
-public class MushroomsStandardMiner {
+public class T10I4D100KStandardMiner {
     public static void main(String[] args) {
 
         Parameters params = InputProcessing.inputHandler();
 
         long startTime = System.nanoTime(); 
 
-        String pathFile = "data/uncertain/Mushrooms.txt";
+        String pathFile = "data/uncertain/T10I4D100K.txt";
         Database db = DatasetLoader.loadDatabase(pathFile);
         TopKHeap topKHeap = new TopKHeap(params.getK(), params, db);
 
@@ -32,7 +32,6 @@ public class MushroomsStandardMiner {
 
         AbstractMiner miner = new StandardMiner(topKHeap, params, db);
         miner.run(tree);
-
 
         long endTime = System.nanoTime(); 
         double elapsedTimeInSeconds = (double) (endTime - startTime) / 1_000_000_000.0; 
