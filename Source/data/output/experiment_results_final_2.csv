@@ -1,0 +1,17 @@
+Experiment_Type,Dataset,Algorithm,K,Alpha,Beta,Runtime(ms),Memory(MB)
+Varying_K,Mushroom,Optimized,75,0.5,0.5,50706
+Varying_K,Mushroom,Optimized,100,0.5,0.5,61615
+Varying_K,Mushroom,Optimized,125,0.5,0.5,63146
+Varying_K,Mushroom,Optimized,150,0.5,0.5,65176
+Varying_Alpha,Mushroom,Optimized,100,0.4,0.6,52131
+Varying_Alpha,Mushroom,Optimized,100,0.5,0.5,62270
+Varying_Alpha,Mushroom,Optimized,100,0.6,0.4,74404
+Varying_Alpha,Mushroom,Optimized,100,0.7,0.3,100329
+Varying_K,Chess,Optimized,20,0.5,0.5,2436
+Varying_K,Chess,Optimized,25,0.5,0.5,25528
+Varying_K,Chess,Optimized,30,0.5,0.5,71772
+Varying_K,Chess,Optimized,35,0.5,0.5,384502
+Varying_Alpha,Chess,Optimized,30,0.4,0.6,158121
+Varying_Alpha,Chess,Optimized,30,0.5,0.5,108644
+Varying_Alpha,Chess,Optimized,30,0.6,0.4,103667
+Varying_Alpha,Chess,Optimized,30,0.7,0.3,69970
